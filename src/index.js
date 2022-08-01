@@ -4,8 +4,7 @@ const route = require('./routes/route.js');
 const { default: mongoose } = require('mongoose');
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 mongoose.connect("mongodb+srv://sharmaji232001:bhuvi844964@cluster0.a2txi.mongodb.net/miniProject",
 )
