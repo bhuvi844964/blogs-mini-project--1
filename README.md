@@ -1,5 +1,5 @@
 # BLOG-PROJECT---------
-First Project In My Life-----------------Function Up----------------Radon Cohort
+First Project In My Life Radon Cohort
 
 
 ## Blogging Site Mini Project Requirement
@@ -110,7 +110,6 @@ Refer below sample
 
 ## Collections
 ### Blogs
-```yaml
 {
   "title": "How to win friends",
   "body": "Blog body",
@@ -124,7 +123,7 @@ Refer below sample
   "createdAt": "2021-09-17T04:25:07.803Z",
   "updatedAt": "2021-09-17T04:25:07.803Z",
 }
-```
+
 
 #### Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.
 
