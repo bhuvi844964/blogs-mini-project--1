@@ -1,6 +1,7 @@
 const authorModel = require("../models/authorModel")
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 //------------------------regex---------------------------//
 
@@ -66,8 +67,13 @@ module.exports.createAuthor = async function (req, res) {
         if (!passwordRegex.test(password)) {
             return res.status(400).send({ Status: false, message: "Please provide valid AlphaNumeric password having min character 8 🛑" })
         }
+        const salt = await bcrypt.genSalt(saltRounds);
 
-        let savedData = await authorModel.create(data)
+        const hashPassword = await bcrypt.hash(password, salt);
+
+        let obj =  { fname, lname, title, password : hashPassword, email } 
+
+        let savedData = await authorModel.create(obj)
         return res.status(201).send({ status : true, msg: savedData })
         
   }
@@ -77,47 +83,53 @@ module.exports.createAuthor = async function (req, res) {
 }
 
 
-//......................................................................//
-
-//....7..API for login................................................. //
-
+//...............................................................//.................................................... //
 
 module.exports.login = async function (req, res) {
   try {
-    let email = req.body.email;
-    let password = req.body.password;
+    const { email, password } = req.body; 
 
-    if (!email || email == "")
-      return res.status(400).send({ Status: false, message: "You have to provide email to login 🛑" })
-    else
-      email = email.trim()
+    if (!email || email === '') {
+      return res
+        .status(400)
+        .send({ status: false, message: 'Please provide email' });
+    }
 
-    if (!password || password == "")
-      return res.status(400).send({ Status: false, message: "You have to provide password to login 🛑" })
+    if (!password || password === '') {
+      return res
+        .status(400)
+        .send({ status: false, message: 'Please provide password to login' });
+    }
 
-    let author = await authorModel.findOne({ email: email, password: password });
-    if (!author)
-      return res.status(401).send({
-        status: false,
-        msg: "username or the password is not corerct 🛑",
-      });
+    const author = await authorModel.findOne({ email });
 
-    let token = jwt.sign(
-      {
-        authorId: author._id
-      },
+    if (!author) {
+      return res
+        .status(401)
+        .send({ status: false, message: 'Email is incorrect' });
+    }
 
-      "functionup-Project-1"
+    const matchPassword = await bcrypt.compare(password, author.password);
+
+    if (!matchPassword) {
+      return res
+        .status(401)
+        .send({ status: false, message: 'Password is incorrect' });
+    }
+
+    const token = jwt.sign(
+      { authorId: author._id },
+      'This-is-a-secret-key',
+      { expiresIn: '24h' }
     );
 
-    res.setHeader("x-api-key", token);
-    res.status(200).send({ status: true, msg: "Author login successful", token: token });
-
+    res.status(200).send({
+      status: true,
+      message: 'Login successful',
+      token,
+    });
+  } catch (error) {
+    res.status(500).send({ status: false, error: error.message });
   }
-  catch (error) {
-    res.status(500).send({ status: false, error: error.message })
-  }
-}
+};
 
-
-//---------------------------------------------------------------//

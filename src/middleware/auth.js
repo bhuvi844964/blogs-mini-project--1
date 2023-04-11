@@ -1,25 +1,24 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 module.exports.tokenChecker = async function (req, res, next) {
   try {
-    let token = req.headers["x-api-key"];
+    const token = req.headers['x-api-key'];
 
-    if (!token) { 
-      return res.status(400).send({ status: false, message: "Missing authentication token in request ⚠️", });
+    if (!token) {
+      return res
+        .status(400)
+        .send({ status: false, message: 'Missing authentication token in request ' });
     }
 
-    jwt.verify(token, "functionup-Project-1", function (err, decoded) {
+    jwt.verify(token, 'This-is-a-secret-key', function (err, decoded) {
       if (err) {
-        return res.status(400).send({ status: false, message: "token invalid ⚠️" });
-      }
-      else {
-        req.authorId = decoded.authorId;
+        return res.status(401).send({ status: false, message: 'Token invalid ' });
+      } else {
+        req._id = decoded._id;
         return next();
       }
     });
-
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).send({ status: false, message: error.message });
   }
 };
