@@ -35,8 +35,8 @@ const createBlog = async function (req, res) {
         else
             data.category = data.category.trim()
 
-        if (data.authorId !== req.authorId)
-            return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
+        if (!mongoose.isValidObjectId(data.authorId ))
+            return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
 
         if (data.isPublished === true)
             data.publishedAt = Date.now()
@@ -66,7 +66,6 @@ const getBlogs = async function (req, res) {
         }
 
         let blogFound = await blogModel.find(req.query);
-        // console.log(blogFound)
         let len = blogFound.length;
         let arr = [];
 
@@ -155,8 +154,8 @@ const deleteByBlogId = async function (req, res) {
         if (!data)
             return res.status(404).send({ status: false, msg: "id does not exist ⚠️" })
 
-        // if (data.authorId._id.toString() !== req.authorId)
-        //     return res.status(401).send({ Status: false, message: "Authorisation Failed " })
+        if (data.authorId._id.toString() !== req.authorId)
+            return res.status(401).send({ Status: false, message: "Authorisation Failed " })
 
         if (data) {
             if (data.isDeleted == false) {
