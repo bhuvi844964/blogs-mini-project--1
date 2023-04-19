@@ -21,7 +21,7 @@ let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 module.exports.createAuthor = async function (req, res) {
     try {
         let data = req.body
-        let { fname, lname, title, password, email } = data
+        let { fname, lname, title, password, email } = data 
 
         if (Object.keys(data).length === 0) {
             return res.status(400).send({ Status: false, message: "Please provide all the details 🛑" })

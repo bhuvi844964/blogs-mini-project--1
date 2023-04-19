@@ -8,11 +8,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', false);
-mongoose.connect(process.env.URL,{ useNewUrlParser: true })
+mongoose.connect("mongodb+srv://sharmaji232001:bhuvi844964@cluster0.a2txi.mongodb.net/miniProject",{ useNewUrlParser: true })
 .then( () => console.log("MongoDb is connected"))
 .catch ( err => console.log(err) )
 
-app.use('/', route); 
+app.use('/', route);  
 
 
 app.listen(process.env.PORT || 3000, function () {

@@ -66,7 +66,7 @@ const getBlogs = async function (req, res) {
         }
 
         let blogFound = await blogModel.find(req.query);
-        console.log(blogFound)
+        // console.log(blogFound)
         let len = blogFound.length;
         let arr = [];
 
@@ -149,21 +149,21 @@ const deleteByBlogId = async function (req, res) {
         let blogId = req.params.blogId
 
         if (!mongoose.isValidObjectId(blogId))
-            return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please enter valid blogId " })
 
         let data = await blogModel.findById(blogId)
         if (!data)
             return res.status(404).send({ status: false, msg: "id does not exist ⚠️" })
 
-        if (data.authorId._id.toString() !== req.authorId)
-            return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
+        // if (data.authorId._id.toString() !== req.authorId)
+        //     return res.status(401).send({ Status: false, message: "Authorisation Failed " })
 
         if (data) {
             if (data.isDeleted == false) {
                 await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
-                res.status(200).send({ status: true, msg: "data deleted ⚠️" })
+                res.status(200).send({ status: true, msg: "data deleted " })
             } else {
-                res.status(200).send({ status: false, msg: "data already deleted ⚠️" })
+                res.status(200).send({ status: false, msg: "data already deleted " })
             }
         }
 
@@ -210,8 +210,8 @@ const deleteByQuery = async function (req, res) {
         if (!data)
             return res.status(404).send({ status: false, msg: "No Record Found or invalid Id ⚠️" })
 
-        if (data.authorId._id.toString() !== req.authorId)
-            return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
+        // if (data.authorId._id.toString() !== req.authorId)
+        //     return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
 
         let updatedData = await blogModel.updateOne(filterdata, { isDeleted: true }, { new: true })
         return res.status(200).send({ status: true, msg: "data is deleted ⚠️" })
