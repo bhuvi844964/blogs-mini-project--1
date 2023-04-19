@@ -106,9 +106,6 @@ const update = async function (req, res) {
         if (!findblog)
             return res.status(404).send({ msg: "blogId  is invalid ⚠️" })
 
-        if (findblog.authorId._id.toString() !== req.authorId)
-            return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
-
         if (findblog.isDeleted == true)
             return res.status(404).send({ msg: "Blog is already deleted ⚠️" })
 
@@ -142,35 +139,37 @@ const update = async function (req, res) {
 
 //...............................................................//
 
-
 const deleteByBlogId = async function (req, res) {
     try {
-        let blogId = req.params.blogId
+        const blogId = req.params.blogId;
 
-        if (!mongoose.isValidObjectId(blogId))
-            return res.status(400).send({ Status: false, message: "Please enter valid blogId " })
-
-        let data = await blogModel.findById(blogId)
-        if (!data)
-            return res.status(404).send({ status: false, msg: "id does not exist ⚠️" })
-
-        if (data.authorId._id.toString() !== req.authorId)
-            return res.status(401).send({ Status: false, message: "Authorisation Failed " })
-
-        if (data) {
-            if (data.isDeleted == false) {
-                await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: Date.now() }, { new: true })
-                res.status(200).send({ status: true, msg: "data deleted " })
-            } else {
-                res.status(200).send({ status: false, msg: "data already deleted " })
-            }
+        if (!mongoose.isValidObjectId(blogId)) {
+            return res.status(400).send({ success: false, message: "Invalid blogId" });
         }
 
+        const blog = await blogModel.findById(blogId);
+        if (!blog) {
+            return res.status(404).send({ success: false, message: "Blog not found" });
+        }
+
+        if (blog.isDeleted) {
+            return res.status(200).send({ success: false, message: "Blog already deleted" });
+        }
+
+        await blogModel.findByIdAndUpdate(
+            blogId,
+            { isDeleted: true, deletedAt: Date.now() },
+            { new: true }
+        );
+
+        res.status(200).send({ success: true, message: "Blog deleted successfully" });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ success: false, message: "Internal server error" });
     }
-    catch (error) {
-        res.status(500).send({ status: false, error: error.message })
-    }
-}
+};
+
+  
 
 
 //---------------------------------------------------------------//
@@ -208,9 +207,6 @@ const deleteByQuery = async function (req, res) {
 
         if (!data)
             return res.status(404).send({ status: false, msg: "No Record Found or invalid Id ⚠️" })
-
-        // if (data.authorId._id.toString() !== req.authorId)
-        //     return res.status(401).send({ Status: false, message: "Authorisation Failed ⚠️" })
 
         let updatedData = await blogModel.updateOne(filterdata, { isDeleted: true }, { new: true })
         return res.status(200).send({ status: true, msg: "data is deleted ⚠️" })

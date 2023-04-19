@@ -24,48 +24,48 @@ module.exports.createAuthor = async function (req, res) {
         let { fname, lname, title, password, email } = data 
 
         if (Object.keys(data).length === 0) {
-            return res.status(400).send({ Status: false, message: "Please provide all the details 🛑" })
+            return res.status(400).send({ Status: false, message: "Please provide all the details " })
         }
         
         if (!fname || fname == "") {
-            return res.status(400).send({ Status: false, message: "Please provide fname 🛑" })
+            return res.status(400).send({ Status: false, message: "Please provide fname " })
         }
         fname=data.fname=fname.trim()
         if (!nameRegex.test(fname)) {
-            return res.status(400).send({ Status: false, message: "Please enter valid fname 🛑" })
+            return res.status(400).send({ Status: false, message: "Please enter valid fname " })
         }
         
         if (!lname || lname == "") {
-            return res.status(400).send({ Status: false, message: "Please provide lname 🛑" })
+            return res.status(400).send({ Status: false, message: "Please provide lname " })
         }
         lname=data.lname=lname.trim()
         if (!nameRegex.test(lname)) {
-            return res.status(400).send({ Status: false, message: "Please enter valid lname 🛑" })
+            return res.status(400).send({ Status: false, message: "Please enter valid lname " })
         }
         
         if (!title || title == "") {
-            return res.status(400).send({ Status: false, message: "Please provide title 🛑" })
+            return res.status(400).send({ Status: false, message: "Please provide title " })
         }
         title=data.title=title.trim()
         if(title){
             if(!( ["Mr", "Mrs", "Miss"].includes(title))) {
-              return res.status(400).send({ Status: false, message: "Please provide valid title 🛑" })
+              return res.status(400).send({ Status: false, message: "Please provide valid title " })
             }
         }
 
         if (!emailRegex.test(email)) {
-            return res.status(400).send({ Status: false, message: "Please enter valid email 🛑" })
+            return res.status(400).send({ Status: false, message: "Please enter valid email " })
         }
         if (email) {
             let checkemail = await authorModel.findOne({ email: email })
 
             if (checkemail) {
-                return res.status(400).send({ Status: false, message: "Please provide another email, this email has been used 🛑" })
+                return res.status(400).send({ Status: false, message: "Please provide another email, this email has been used " })
             }
         }
 
         if (!passwordRegex.test(password)) {
-            return res.status(400).send({ Status: false, message: "Please provide valid AlphaNumeric password having min character 8 🛑" })
+            return res.status(400).send({ Status: false, message: "Please provide valid AlphaNumeric password having min character 8 " })
         }
         const salt = await bcrypt.genSalt(saltRounds);
 
