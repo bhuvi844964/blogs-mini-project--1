@@ -13,30 +13,30 @@ const createBlog = async function (req, res) {
     try {
         let data = req.body
         if (Object.keys(data).length === 0)
-            return res.status(400).send({ Status: false, message: "Please provide all the required data ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please provide all the required data " })
 
         if (!data.title || data.title == "")
-            return res.status(400).send({ Status: false, message: "Please provide title of the blog ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please provide title of the blog " })
         else
             data.title = data.title.trim()
 
         if (!data.body || data.body == "")
-            return res.status(400).send({ Status: false, message: "Please provide body of the blog ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please provide body of the blog " })
         else
             data.body = data.body.trim()
 
         if (!data.authorId || data.authorId == "")
-            return res.status(400).send({ Status: false, message: "Please provide authorId ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please provide authorId " })
         else
             data.authorId = data.authorId.trim()
 
         if (!data.category || data.category == "")
-            return res.status(400).send({ Status: false, message: "Please provide blog category ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please provide blog category " })
         else
             data.category = data.category.trim()
 
         if (!mongoose.isValidObjectId(data.authorId ))
-            return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
+            return res.status(400).send({ Status: false, message: "Please enter valid authorId " })
 
         if (data.isPublished === true)
             data.publishedAt = Date.now()
@@ -62,7 +62,7 @@ const getBlogs = async function (req, res) {
     try {
         if (req.query.authorId) {
             if (!mongoose.isValidObjectId(req.query.authorId))
-                return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
+                return res.status(400).send({ Status: false, message: "Please enter valid authorId " })
         }
 
         let blogFound = await blogModel.find(req.query);
@@ -77,7 +77,7 @@ const getBlogs = async function (req, res) {
         if (arr.length > 0) {
             res.status(200).send({ status: true, data: arr, count: arr.length });
         } else {
-            res.status(404).send({ status: false, message: "No such blog is found ⚠️" });
+            res.status(404).send({ status: false, message: "No such blog is found " });
         }
 
     } catch (error) {
@@ -97,17 +97,17 @@ const update = async function (req, res) {
         let blogId = req.params.blogId
 
         if(Object.keys(data).length==0)
-        return res.status(404).send({ msg: "No data for Update ⚠️" })
+        return res.status(404).send({ msg: "No data for Update " })
 
         if(!mongoose.isValidObjectId(blogId))
-        return res.status(400).send({ Status: false, message: "Please enter valid blogId ⚠️" })
+        return res.status(400).send({ Status: false, message: "Please enter valid blogId " })
 
         let findblog = await blogModel.findById(blogId)
         if (!findblog)
-            return res.status(404).send({ msg: "blogId  is invalid ⚠️" })
+            return res.status(404).send({ msg: "blogId  is invalid " })
 
         if (findblog.isDeleted == true)
-            return res.status(404).send({ msg: "Blog is already deleted ⚠️" })
+            return res.status(404).send({ msg: "Blog is already deleted " })
 
         if (findblog.isDeleted == false) {
             let updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, {
@@ -156,6 +156,7 @@ const deleteByBlogId = async function (req, res) {
             return res.status(200).send({ success: false, message: "Blog already deleted" });
         }
 
+
         await blogModel.findByIdAndUpdate(
             blogId,
             { isDeleted: true, deletedAt: Date.now() },
@@ -186,7 +187,7 @@ const deleteByQuery = async function (req, res) {
 
         if (authorId) {
             if (!mongoose.isValidObjectId(req.query.authorId))
-                return res.status(400).send({ Status: false, message: "Please enter valid authorId ⚠️" })
+                return res.status(400).send({ Status: false, message: "Please enter valid authorId " })
             else
                 filterdata.authorId = authorId
         }
@@ -206,10 +207,10 @@ const deleteByQuery = async function (req, res) {
         let data = await blogModel.findOne(filterdata)
 
         if (!data)
-            return res.status(404).send({ status: false, msg: "No Record Found or invalid Id ⚠️" })
+            return res.status(404).send({ status: false, msg: "No Record Found or invalid Id " })
 
         let updatedData = await blogModel.updateOne(filterdata, { isDeleted: true }, { new: true })
-        return res.status(200).send({ status: true, msg: "data is deleted ⚠️" })
+        return res.status(200).send({ status: true, msg: "data is deleted " })
 
     }
     catch (error) {

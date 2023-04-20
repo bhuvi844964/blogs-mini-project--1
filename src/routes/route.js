@@ -17,13 +17,13 @@ router.post("/login", authorController.login)
 
 router.post("/blogs",commonMiddleware.tokenChecker, blogController.createBlog)
 
-router.get("/blogs", commonMiddleware.tokenChecker, blogController.getBlogs)
+router.get("/blogs", commonMiddleware.tokenChecker , blogController.getBlogs)
 
-router.put("/blogs/:blogId", commonMiddleware.tokenChecker, blogController.update)
+router.put("/blogs/:blogId", commonMiddleware.tokenChecker,commonMiddleware.authorization, blogController.update)
 
 //...........................Delete.............................//
 
-router.delete("/blogs/:blogId", commonMiddleware.tokenChecker, blogController.deleteByBlogId)
+router.delete("/blogs/:blogId", commonMiddleware.tokenChecker,commonMiddleware.authorization, blogController.deleteByBlogId)
 
 router.delete("/blogs", commonMiddleware.tokenChecker, blogController.deleteByQuery)
 
