@@ -5,7 +5,7 @@ const saltRounds = 10;
 
 //------------------------regex---------------------------//
 
-let nameRegex = /^[a-zA-Z]{1,20}$/
+let nameRegex = /^[a-zA-Z]{1,40}$/
 
 let emailRegex = /^[a-z]{1}[a-z0-9._]{1,100}[@]{1}[a-z]{2,15}[.]{1}[a-z]{2,10}$/
 
