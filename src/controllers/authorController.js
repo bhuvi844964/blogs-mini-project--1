@@ -119,7 +119,7 @@ module.exports.login = async function (req, res) {
 
     const token = jwt.sign(
       { authorId: author._id },
-      'This-is-a-secret-key',
+      process.env.SECRET_KEY,
       { expiresIn: '24h' }
     );
 

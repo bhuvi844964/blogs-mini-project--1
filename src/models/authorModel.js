@@ -24,7 +24,7 @@ const authorSchema = new mongoose.Schema({
         required: true,
     },
 },  
-   {timestamps:false}
+   {timestamps:true}
   
   );
 

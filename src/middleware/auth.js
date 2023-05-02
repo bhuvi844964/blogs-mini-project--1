@@ -11,7 +11,7 @@ module.exports.authentication = async function (req, res, next) {
         .send({ status: false, message: 'Missing authentication token in request' });
     }
 
-    jwt.verify(token, 'This-is-a-secret-key', function (err, decoded) {
+    jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
       if (err) {
         return res.status(401).send({ status: false, message: 'Token invalid' });
       } else {
