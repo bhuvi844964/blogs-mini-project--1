@@ -15,6 +15,12 @@ mongoose.connect(process.env.URL.toString(),{ useNewUrlParser: true })
 app.use('/', route);  
 
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("Oops, something went wrong.");
+  });
+
+
 app.listen(process.env.PORT , function () {
     console.log('Express app running on port ' + (process.env.PORT ))  
 }); 
